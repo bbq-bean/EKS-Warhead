@@ -19,17 +19,17 @@ provider "aws" {
 # this is because you create the initial TF managed infra with 
 # only a local backend and state file, 
 # then TF init with a real TF backend like DynamoDB with S3 here
-/*terraform {
+terraform {
    backend "s3" {
-     bucket         = "terraform-state-backend-02-28-25"
+     bucket         = "terraform-state-backend-02-28-25-2"
      key            = "terraform.tfstate"
      region         = "us-west-1"
-     dynamodb_table = "terraform-lock-02-28-25"
+     dynamodb_table = "terraform-lock-02-28-25-2"
    }
- }*/
+ }
 
-resource "aws_dynamodb_table" "terraform-lock-02-28-25" {
-    name           = "terraform_state"
+resource "aws_dynamodb_table" "terraform_state" {
+    name           = "terraform-lock-02-28-25-2"
     read_capacity  = 5
     write_capacity = 5
     hash_key       = "LockID"
@@ -43,7 +43,7 @@ resource "aws_dynamodb_table" "terraform-lock-02-28-25" {
 } 
 
 resource "aws_s3_bucket" "backend_bucket" {
-  bucket              = "terraform-state-backend-02-28-25"
+  bucket              = "terraform-state-backend-02-28-25-2"
   object_lock_enabled = true
 
   tags = {
