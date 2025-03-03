@@ -123,3 +123,23 @@ resource "aws_route_table_association" "public_subnet_2_association" {
   subnet_id      = aws_subnet.public_subnet_2.id
   route_table_id = aws_route_table.public_route_table.id
 }
+
+output "vpc_id" {
+  value = aws_vpc.vpc.id
+}
+
+output "public_subnet_1_id" {
+  value = aws_subnet.public_subnet_1.id
+}
+
+output "public_subnet_2_id" {
+  value = aws_subnet.public_subnet_2.id
+}
+
+output "private_subnet_1_id" {
+  value = aws_subnet.private_subnet_1.id
+}
+
+output "private_subnet_2_id" {
+  value = aws_subnet.private_subnet_2.id
+}
