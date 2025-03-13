@@ -21,15 +21,15 @@ provider "aws" {
 # then TF init with a real TF backend like DynamoDB with S3 here
 terraform {
     backend "s3" {
-      bucket         = "terraform-state-backend-02-28-25-2"
+      bucket         = "terraform-state-backend-03-10-25-1"
       key            = "terraform.tfstate"
       region         = "us-west-1"
-      dynamodb_table = "terraform-lock-02-28-25-2"
+      dynamodb_table = "terraform-lock-03-10-25-1"
     }
  }
 
 resource "aws_dynamodb_table" "terraform_state" {
-    name           = "terraform-lock-02-28-25-2"
+    name           = "terraform-lock-03-10-25-1"
     read_capacity  = 5
     write_capacity = 5
     hash_key       = "LockID"
@@ -39,6 +39,7 @@ resource "aws_dynamodb_table" "terraform_state" {
     }
     tags = {
         "Name" = "DynamoDB Terraform State Lock Table"
+        "auto-delete" = "no"
     }
   lifecycle {
     prevent_destroy = true
@@ -46,7 +47,7 @@ resource "aws_dynamodb_table" "terraform_state" {
 } 
 
 resource "aws_s3_bucket" "backend_bucket" {
-  bucket              = "terraform-state-backend-02-28-25-2"
+  bucket              = "terraform-state-backend-03-10-25-1"
   object_lock_enabled = true
 
   tags = {
