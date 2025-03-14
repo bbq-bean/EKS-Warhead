@@ -35,8 +35,22 @@ module "eks" {
   cluster_endpoint_public_access = true
 
   # Optional: Adds the current caller identity as an administrator via cluster access entry
-  enable_cluster_creator_admin_permissions = true
-  
+  enable_cluster_creator_admin_permissions = false
+
+  access_entries = {
+      bastion-admin = {
+        principal_arn = "arn:aws:iam::105798279251:role/bastion-with-admin"
+
+        policy_associations = {
+          this = {
+            policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+            access_scope = {
+              type = "cluster"
+            }
+          }
+        }
+      }
+  }
   # dont configure KMS cluster encryption
   kms_key_enable_default_policy = false
   cluster_encryption_config = {}
@@ -87,3 +101,28 @@ module "eks" {
     Environment = "staging"
   }
 }
+
+# add extra required policy for karpenter
+resource "aws_iam_role_policy_attachment" "karpenter_price_policy_attachment" {
+  policy_arn = "arn:aws:iam::aws:policy/AWSPriceListServiceFullAccess"
+  role       = module.eks.eks_managed_node_groups["utility-ng"].iam_role_name
+}
+
+resource "aws_iam_role_policy_attachment" "karpenter_spot_policy_attachment" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
+  role       = module.eks.eks_managed_node_groups["utility-ng"].iam_role_name
+}
+
+
+output "cluster_name" {
+  value = module.eks.cluster_name
+}
+
+output "cluster_endpoint" {
+  value = module.eks.cluster_endpoint
+}
+
+output "cluster_certificate_authority_data" {
+  value = module.eks.cluster_certificate_authority_data
+}
+

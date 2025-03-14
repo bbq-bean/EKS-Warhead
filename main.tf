@@ -9,3 +9,10 @@ module "kubernetes" {
   vpc_id = module.network.vpc_id
   
 }
+
+module "plugins_karpenter" {
+  source = "./modules/EKS-plugins/karpenter"
+  cluster_name = module.kubernetes.cluster_name
+  cluster_endpoint = module.kubernetes.cluster_endpoint
+  cluster_certificate_authority_data = module.kubernetes.cluster_certificate_authority_data
+}
